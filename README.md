@@ -12,6 +12,7 @@ Don't do nothing ones -> 0, 8, 32, 40, 64, 72, 96, 104, 128, 160, 168, 192, 200,
 
 *Actually, the funny part is to explore randomd different rules and see how much the cell behaviour can change
 by just increasing a number.
+
 ** But let's be honest, these rules suck. At least, if you keep initial states of the cellular automata with 
 only middle cell on.
 
