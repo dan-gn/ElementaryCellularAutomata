@@ -34,6 +34,7 @@ March 3rd, 2021
 
 import numpy as np
 import cv2
+import sys
 
 class ElementaryCellularAutomata:
 
@@ -82,7 +83,7 @@ class ElementaryCellularAutomata:
         self.image = np.zeros([pixels*self.numGenerations, pixels*self.n])
         for i, row in enumerate(self.image):
             for j in range(len(row)):
-                self.image[i][j] = generations[round(np.floor(i/pixels))][round(np.floor(j/pixels))]
+                self.image[i][j] = generations[int(np.floor(i/pixels))][int(np.floor(j/pixels))]
 
     # Display image of full generations
     def display(self):
@@ -98,6 +99,7 @@ class ElementaryCellularAutomata:
         if not(hasattr(self, "image")):
             self.generateImage()
         sim = np.zeros_like(self.image)
+        print('Press ESC to stop simulation')
         windowName = 'Elemental Cellular Automata'
         for i in range(10, len(sim), 10):
             sim[-i:] = self.image[0:i]
@@ -108,13 +110,33 @@ class ElementaryCellularAutomata:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+# Set inputs from command arguments, or set default if any argument is defined
+def getInputArguments(inputs):
+    if len(inputs) == 0:
+        return 100, 50, 30
+    elif len(inputs) < 3:
+        print('Missing arguments. Input arguments to define the amount of cells and generations and rule number are expected.')
+    elif len(inputs) > 3:
+        print('More arguments than expected. Only expected values for amount of cells, generations and  rule number.')
+    else:
+        try:
+            [n, numGenerations, rule] = [int(x) for x in inputs]
+            return n, numGenerations, rule
+        except:
+            print('Something went wrong. Verify all input arguments are integers.')
+    return -1, -1, -1
+
 
 if __name__ == "__main__":
-    n = 100     # Number of cells
-    rule = 177   # Ruleset 
-    numGenerations = 50 # Number of generations
 
-    CA = ElementaryCellularAutomata(n, rule, numGenerations)
-    CA.generate()
-    CA.runSimulation()
+    [n, numGenerations, rule] = getInputArguments(sys.argv[1:])
+
+    if n != -1:
+        print('Number of cells: ' + str(n))
+        print('Number of generations: ' + str(numGenerations))
+        print('Rule : ' + str(rule))
+
+        CA = ElementaryCellularAutomata(n, rule, numGenerations)
+        CA.generate()
+        CA.runSimulation()
 
