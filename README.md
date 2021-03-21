@@ -17,9 +17,8 @@ by just increasing a number.
 only middle cell on.
 
 Notes:
-- Requires Numpy and OpenCV libraries
-- The boundries are being ignored by the problem. They both start in '0' and keep their value constant 
-during all generations.
+- Requires Numpy, OpenCV and Sys libraries
+- The boundary condition are periodical, so the left boundry and right boundry of the cellular automata are linked.
 - This video has a great explanation: https://www.youtube.com/watch?v=W1zKu3fDQR8&t=21s
 - This links is useful and actually has images from all differenet rulsets:
 https://mathworld.wolfram.com/ElementaryCellularAutomaton.html
