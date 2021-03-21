@@ -20,9 +20,8 @@ by just increasing a number.
 only middle cell on.
 
 Notes:
-- Requires Numpy and OpenCV libraries
-- The boundries are being ignored by the problem. They both start in '0' and keep their value constant 
-during all generations.
+- Requires Numpy, OpenCV and Sys libraries
+- The boundary condition are periodical, so the left boundry and right boundry of the cellular automata are linked.
 - This video has a great explanation: https://www.youtube.com/watch?v=W1zKu3fDQR8&t=21s
 - This links is useful and actually has images from all differenet rulsets:
 https://mathworld.wolfram.com/ElementaryCellularAutomaton.html
@@ -60,8 +59,15 @@ class ElementaryCellularAutomata:
         leftNeighbors = int(np.floor(neighbors/2))
         rightNeighbors = int(np.ceil(neighbors/2))
         for idx, gen in enumerate(self.generations[1:]):
-            for cell in range(leftNeighbors, self.n - rightNeighbors):
-                neighborhood = self.generations[idx][cell-leftNeighbors : cell+rightNeighbors+1]
+            for cell in range(self.n):
+                if cell == 0:
+                    neighborhood = [self.generations[idx][-leftNeighbors]]
+                    neighborhood.extend(self.generations[idx][:rightNeighbors+1])
+                elif cell == self.n-1:
+                    neighborhood = self.generations[idx][cell-leftNeighbors:]
+                    neighborhood.extend(self.generations[idx][:rightNeighbors])
+                else:
+                    neighborhood = self.generations[idx][cell-leftNeighbors : cell+rightNeighbors+1]    
                 gen[cell] = self.ruleset[int("".join(str(c) for c in neighborhood),2)]
 
     # Print all generations in the command window
@@ -99,16 +105,16 @@ class ElementaryCellularAutomata:
         if not(hasattr(self, "image")):
             self.generateImage()
         sim = np.zeros_like(self.image)
-        print('Press ESC to stop simulation')
         windowName = 'Elemental Cellular Automata'
         for i in range(10, len(sim), 10):
-            sim[-i:] = self.image[0:i]
+            sim[-i:] = self.image[:i]
             cv2.imshow(windowName, sim)
             key = cv2.waitKey(500)
             if key == 27: #if ESC is pressed, the simulation ends
                 break
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
 
 # Set inputs from command arguments, or set default if any argument is defined
 def getInputArguments(inputs):
@@ -139,4 +145,3 @@ if __name__ == "__main__":
         CA = ElementaryCellularAutomata(n, rule, numGenerations)
         CA.generate()
         CA.runSimulation()
-
